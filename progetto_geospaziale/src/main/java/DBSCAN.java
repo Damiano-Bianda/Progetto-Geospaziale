@@ -83,7 +83,7 @@ public class DBSCAN {
                         }
                         children.removeAll(alreadyVisited);
                         queue.addAll(children);
-                        added += queue.size();
+                        added += children.size();
                     }
                 }
                 if(added > 1) {
