@@ -465,8 +465,8 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="73" />
-    <option name="y" value="21" />
+    <option name="x" value="536" />
+    <option name="y" value="74" />
     <option name="width" value="1175" />
     <option name="height" value="993" />
   </component>
@@ -621,15 +621,15 @@
       <workItem from="1545411260192" duration="3382000" />
       <workItem from="1545414972027" duration="10697000" />
       <workItem from="1545491141739" duration="5531000" />
-      <workItem from="1545498108100" duration="1480000" />
+      <workItem from="1545498108100" duration="1483000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27829000" />
+    <option name="totallyTimeSpent" value="27832000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="73" y="21" width="1175" height="993" extended-state="0" />
+    <frame x="536" y="74" width="1175" height="993" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
@@ -655,7 +655,7 @@
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="3" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39932126" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39932126" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
