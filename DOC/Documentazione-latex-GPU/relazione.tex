@@ -1,0 +1,322 @@
+% !TeX spellcheck = <none>
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[italian]{babel}
+\usepackage[latin1]{inputenc}
+\usepackage{lipsum}% http://ctan.org/pkg/lipsum
+\usepackage{textgreek}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{subcaption}
+
+\lstset{
+	basicstyle=\small,
+	columns=fullflexible,
+	frame=single,
+	breaklines=true,
+	postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+	emph={
+		__shared__
+	}
+}
+
+\begin{document}
+	\title{Progetto di Gestione Dell'Informazione Geospaziale - DBSCAN}
+	\author{Damiano~Bianda}
+	\maketitle
+\begin{abstract}
+	%\boldmath\\
+	In questo progetto si vuole implementare l'algoritmo di clustering DBSCAN tramite Java.\\
+	Dato un insieme di coordinate proiettate, queste vengono classificate secondo il cluster d'appartenenza o come outliers.\\
+	Infine i risultati ottenuti sono rappresentati attraverso una mappa utilizzando il software QGIS.
+\end{abstract}
+\section{Algoritmo}
+\subsection{Introduzione}
+DBSCAN è un algoritmo di clustering partitivo basato sulla densità. I principali vantaggi sono che è possibile scoprire cluster di forme arbitraria (dimensioni e forme differenti) e identificare gli outliers, ossia i punti che sono in un'area densamente popolata e quindi non appartengono a nessun cluster. I svantaggi sono invece che essendo un algoritmo parametrico è necessario definire dei parametri in base al tipo di dati da analizzare e che alcuni dataset presentano il problema della densità variabile, ossia sono presenti più cluster ma a densità diverse e quindi dati dei parametri non è possibile in un esecuzione identificarli tutti.
+\subsection{Definizioni}
+DBSCAN è parametrizzato tramite \textepsilon\enspace e MinPoints.\\
+Il vicinato di un punto sono tutti i punti che ricadono nel cerchio con centro pari alla sua coordinata e raggio \textepsilon.\\
+Un punto è detto:
+\begin{itemize}
+	\item core point se il suo vicinato contiene almeno MinPoints elementi.
+	\item border point se non è un core point, ma è nel vicinato di uno o più core point
+	\item noise point se non è nè core point, nè border point
+\end{itemize}
+Le definizioni seguenti descrivono un rapporto di connessione tra i punti e servono per definire il concetto di cluster:
+\begin{itemize}
+	\item directly density-reachable\\
+	un punto p è detto directly density-reachable da un punto q se p è nel vicinato di q e se q è un core point
+	\item density-reachable\\
+	un punto p è detto density-reachable da un punto q se c'è una serie di punti, in cui il primo è q e l'ultimo è p, dove ogni elemento è directly density-reachable dal precedente
+	\item density-connected\\
+	un punto p è detto density-connected ad un punto q se c'è un punto r tale che p e q sono density-reachable da r
+\end{itemize}
+Quindi un cluster è un insieme massimo di punti density-connected.
+\subsection{Esecuzione di DBSCAN}
+DBSCAN itera su tutti i punti presenti nel dataset e per ognuno si determina se è un core point.\\
+In caso positivo si crea un cluster che viene espanso coi punti presenti nel suo vicinato.\\
+Il processo si ripete iterativamente controllando i punti appena aggiunti, se a loro volta sono core point viene aggiunto il loro vicinato e così via fin quando tutti i punti density-reachable sono stati inglobati nel cluster.\\
+Il vicinato non viene aggiunto al cluster quando un punto è border point, poichè non esistono punti density-reachable da questo.\\
+Una volta terminato l'algoritmo si ottiene un dataset con i suoi elementi etichettati secondo i differenti cluster o come noise.
+\section{Implementazione}
+\subsection{Introduzione}
+Si è deciso di sfruttare la capacità di parallelismo messa a disposizione dalla GPU facendo in modo che ogni thread calcoli esattamente un LBP.\\
+Sono stati implementati due kernel differenti, il primo che utilizza la shared memory ed il secondo che utilizza la texture memory in modo da potere confrontare le implementazioni (LocalBinaryPatternGPUShared.cu e LocalBinaryPatternGPUTexture.cu).\\
+Molte funzioni \_\_device\_\_ tra i due file sono le stesse, questo per motivi di performance, infatti chiamare funzioni \_\_device\_\_ da un altro file richiede di compilare il codice in modo relocatable (-rdc=true), generando però tempi d'esecuzione maggiori.\\
+Di seguito viene spiegato com'è stato implementato l'algoritmo,  facendo riferimento al codice coinvolto alla fine di ogni sezione.
+
+\subsubsection{Dimensione della griglia e dei blocchi - lato host}
+Lavorando su una matrice di valori d'intensità è naturale utilizzare una griglia 2D e blocchi di threads 2D.\\
+La dimensione di blocco, è quella che empiricamente ha dato i tempi migliori, è fissata a 16x16.\\
+La dimensione della griglia viene calcolata a runtime, facendo in modo che ogni pixel dell'immagine abbia un thread associato.\\\\
+Utils.h: 
+\begin{itemize}
+	\item const dim3 BLOCK\_SIZE(16, 16)
+	\item dim3 getGridSize(GrayScaleImage grayScaleImage)
+\end{itemize}
+
+\subsection{Implementazione tramite shared memory}
+
+\subsubsection{Utilizzo della constant memory - lato host}
+Ogni thread deve ottenere i valori d'intensità dei \textit{points} punti sulla circonferenza di raggio \textit{radius} per poi costruire il LBP.\\
+I valori vengono calcolati tramite interpolazione bilineare, quindi per il calcolo dell'intensità di un punto il thread necessita di:\\
+\begin{enumerate}
+	\item la coordinata relativa di uno dei quattro pixel coinvolti nel calcolo dell'interpolazione bilineare, precisamente quello in alto a sinistra, le altre tre vengono ricavate da questa.\\
+	(relativa rispetto pixel centrale su cui si calcola il LBP, non a p)
+	\item la distanza \textalpha \enspace in direzione x tra il punto ed i pixel alla sua sinistra
+	\item la distanza \textbeta \enspace in direzione y tra il punto ed i pixel sovrastanti
+\end{enumerate}
+la seguente funzione restituisce il valore interpolato:
+\begin{equation} \label{eq:2}
+p = tex(x,y)(1-\alpha)(1-\beta)+tex(x+1,y)\alpha(1-\beta)+tex(x,y+1)(1-\alpha)\beta+tex(x+1,y+1)\alpha\beta
+\end{equation}
+\\
+questi valori sono costanti durante tutta l'esecuzione, quindi sono stati precalcolati e salvati in constant memory in modo da essere acceduti simultaneamente da più threads il più velocemente possibile, evitando calcoli onerosi e ripetuti nel kernel (il calcolo coinvolge le funzioni round, abs, sin e cos).\\
+\begin{figure}[H]
+	\includegraphics[width=\linewidth]{images/bilinear_complete.png}
+	\caption{Esempio di interpolazione bilineare}
+	\label{fig:ratio}
+\end{figure}
+Point.h:
+\begin{itemize}
+	\item void surroundingBilinearPoints(const int points, const float radius, Point** bilinearNeighborhoodCoordinates, PointF** bilinearParameters);
+\end{itemize}
+LocalBinaryPatternGPUShared.cu: 
+\begin{itemize}
+	\item \_\_constant\_\_ static Point neighboroodRelativeCoordinates[MAX\_POINTS]
+	\item \_\_constant\_\_ static PointF bilinearFilterParameters[MAX\_POINTS]
+	\item void copyNeighborhoodCoordsInConstantMemory(Point* points, int length)
+	\item void copyBilinearParamsInConstantMemory(PointF * points, int length)
+	\item Histogram* LocalBinaryPatternGPUSharedMemory(GrayScaleImage* grayScaleImage, int points, float radius, bool bilinear, double* time)
+\end{itemize}
+\subsubsection{Utilizzo template metaprogramming - lato host}
+L'algoritmo lato device prevede che un thread iteri sui \textit{points} punti presenti sulla circonferenza di raggio \textit{radius}, utilizzando direttamente la direttiva \#pragma unroll \textit{points} per fare l'unloop non portava inizialmente benefici in quanto il valore \textit{points} non è conosciuto a tempo di compilazione.\\
+Tramite l'utilizzo dei templates, della ricorsione e sapendo che la variabile \textit{points} è limitata tra 1 e 32 è possibile emulare un ciclo for lato host, in cui viene invocato il kernel con valore di \textit{points} crescente ad ogni iterazione ed il compilatore è in grado di compilare le diverse versioni del kernel e fare eventuali ottimizzazioni.\\
+Utilizzando questa tecnica il tempo d'esecuzione ha avuto un buon miglioramento a scapito di un eseguibile di grandezza maggiore, ma comunque irrisoria.\\\\
+LocalBinaryPatternGPUShared.cu:
+\begin{itemize}
+	\item template\textless int staticIteration\textgreater\\
+	void selectKernel(int dynamicIteration, bool bilinear, int sharedSize, GrayScaleImage d\_image, Histogram d\_histogram, unsigned int mask, int borderLength)
+\end{itemize}
+\subsubsection{Utilizzo della shared memory - lato device}
+Ogni thread appartenente ad un blocco deve accedere al pixel su cui calcola il LBP e ai pixels circostanti la cui distanza massima in una delle due dimensioni è \textit{borderLength}.\\
+\textit{borderLength} viene calcolato prima di lanciare il kernel iterando sulle coordinate relative dei pixel top-left e cercando il valore massimo in una delle dimensioni x e y, questo valore viene incrementato di 1 poichè durante l'interpolazione è necessario accedere ai pixels adiacenti e sottostanti a quello top-left a distanza 1.\\
+Gli accessi alla memoria possono essere velocizzati con la lettura da shared memory, quindi un blocco 2D di threads deve caricare in shared memory una porzione dell'immagine pari a:
+\begin{equation} \label{eq:2}
+(blockDim.x + 2\enspace borderLength) \quad x \quad (blockDim.y + 2\enspace borderLength)
+\end{equation}
+Tramite un doppio ciclo for si incrementano due offset, uno in direzione x e l'altro in y, che vengono aggiunti alle coordinate di ogni thread del blocco.\\
+Un offset parte da un valore di (-\textit{borderLength}) ed incrementato ad ogni iterazione di blockDim.\_ fin quando raggiunge (blockDim.\_ + \textit{borderLength}), ossia il valore che permette a tutte le celle di shared memory di essere scritte da un thread del blocco.\\
+Ad ogni iterazione i threads aggiungono gli offset alle proprie coordinate in modo da leggere il valore corretto da global memory e scriverlo in shared memory, controllando che la coordinata di scrittura sia nei limiti della shared memory e scrivendo 0 in caso la coordinata di lettura sia fuori dai limiti dell'immagine (0-padding).\\
+Al termine di questa operazione preliminare i threads si coordinano ed è possibile cominciare il calcolo del LBP.\\\\
+LocalBinaryPatternGPUShared.cu:
+\begin{itemize}
+	\item \_\_device\_\_ static void copyImageToSharedMemory(GrayScaleImage grayScaleImage, unsigned char* sharedTile, int borderLength, int sharedWidth, int sharedHeight)
+\end{itemize}
+\subsubsection{Calcolo del LBP - lato device}
+Il LBP generato da un thread è un vettore binario contenuto in una variabile a 32 bit.\\
+Un thread itera \textit{points} volte, ad ogni iterazione legge dalla constant memory le distanze \textalpha \enspace, \textbeta \enspace e la coordinata del pixel top-left coinvolto nel calcolo dell'interpolazione, le altre essendo adiacenti vengono ricavate, tramite questi valori si recuperano le intensità dalla shared memory e si calcola l'intensità del punto p corrente.\\
+Successivamente l'intensità viene confrontata con quella del pixel centrale e si sovrascrive con 1 o 0 l'ultimo bit della variabile LBP, precedentemente shiftata verso sinistra di una posizione. L'operazione di confronto viene effettuata tramite operatori bitwise in modo da evitare eventuali divergenze all'interno di una warp, sfruttando il fatto che il confronto con \textgreater= restituisce 1 o 0, ossia il valore che viene scritto.\\\\
+LocalBinaryPatternGPUShared.cu:
+\begin{itemize}
+	\item template\textless int points\textgreater\\
+	\_\_device\_\_ static unsigned int calculateLocalBinaryPatternBilinear(int borderLength, unsigned char* sharedMemory, int sharedWidth, int sharedHeight)
+\end{itemize}
+\subsubsection{Conteggio delle transizioni del LBP - lato device}
+Per contare il numero di transizioni presenti in un LBP (01 e 10) si sono utilizzati gli operatori bitwise, in modo da ottenere il conteggio con un numero fisso di istruzioni indipendentemente dalla lunghezza del vettore binario, evitando di iterare sui suoi bit.\\
+Facendo la xor tra il vettore binario LBP e la sua versione ruotata di una posizione si ottiene una parola binaria contenente un numero di 1 pari al conteggio delle transizioni, l'intrinsic \_\_popc(unsigned int x) di CUDA permette di contarli con un unica istruzione.\\\\
+LocalBinaryPatternGPUShared.cu:
+\begin{itemize}
+	\item \_\_device\_\_ static unsigned int countBitSwitches(unsigned int word, int length, unsigned int mask)
+\end{itemize}
+\subsubsection{Controllo uniformità ed incremento istogramma - lato device}
+Nel caso il conteggio sia minore od uguale a 2 il LBP è uniforme, l'uniformità ed eventualmente il numero di bit ad 1 del LBP uniforme definiscono quale colonna dell'istogramma incrementare.\\
+Quindi nel caso positivo si torna l'indice di colonna dell'istogramma, pari al conteggio degli 1 del LBP (sempre tramite \_\_popc(unsigned int x)), altrimenti si torna l'indice della colonna riservata alla frequenza dei LBP non uniformi, pari a \textit{points} + 1.
+Infine il thread incrementa l'istogramma utilizzando la funzione atomica atomicAdd per evitare race conditions.\\\\
+LocalBinaryPatternGPUShared.cu:
+\begin{itemize}
+	\item \_\_device\_\_ static unsigned int calculateHistogramIndex(unsigned int LBPValue, unsigned int numberOfBitSwitches, int points)
+	\item \_\_device\_\_ static void incrementBin(Histogram histogram, unsigned int binIndex)
+\end{itemize}
+\subsection{Implementazione tramite texture memory}
+L'algoritmo LBP accede ai pixel dell'immagine seguendo uno schema spaziale, inoltre l'interpolazione bilineare è una funzionalità che viene fornita automaticamente se si utilizza la texture memory.\\
+Per questi motivi si è voluto implementare un kernel che utilizza la texture memory, in modo da confrontare i risultati ottenuti con la soluzione che usa la shared.\\
+Poichè molte parti del codice sono identiche alla versione con shared memory verranno riportate solo le differenze principali, che riguardano perlopiù l'utilizzo di funzioni e costrutti CUDA diversi.\\
+\subsubsection{Differenze d'implementazione - lato host}
+Bisogna creare un oggetto di tipo texture che fa riferimento ad essa e serve sia per configurare le opzioni relative alla texture nel codice host, sia per fare riferimento alla texture nel codice device.\\
+Durante la sua creazione bisogna specificare:
+\begin{itemize}
+	\item Type = unsigned char\\
+	il tipo di dati nel buffer di partenza, in questo caso unsigned char
+	\item Dim = cudaTextureType2D\\
+	la dimensionalità della texture, in questo caso 2D
+	\item ReadMode = cudaReadModeNormalizedFloat\\
+	il formato dei dati letti nel kernel, l'intensità dei pixel è un float compreso tra 0.0f ed 1.0f
+\end{itemize}
+Prima del lancio del kernel è necessario specificare altri campi dell'oggetto texture:
+\begin{itemize}
+	\item addressMode[0] = addressMode[1] = cudaAddressModeBorder\\
+	la modalità di lettura nel caso si legge fuori dai bordi della texture, in questo caso si usa 0-padding (l'indice specifica se ci si riferisce alla dimensione x o y).
+	\item filterMode = cudaFilterModeLinear\\
+	si vuole interpolare linearmente i valori che non ricadono al centro di un texel, avendo specificato precedentemente la dimensionalità 2D si applica l'interpolazione bilineare
+\end{itemize}
+L'utilizzo della texture memory richiede metodi d'allocazione della memoria e di trasferimento dei dati diversi.
+\lstset {language=C++}
+\begin{lstlisting}
+cudaError_t cudaMallocPitch(void** devPtr, size_t* pitch, size_t width, size_t height)
+\end{lstlisting}
+Alloca la memoria e allinea le righe aggiungendo automatico dei byte di padding dove serve.
+\lstset {language=C++}
+\begin{lstlisting}
+cudaError_t cudaMemcpy2D(void* dst, size_t dpitch, const void* src, size_t spitch, size_t width, size_t height, enum cudaMemcpyKind kind)
+\end{lstlisting}
+Trasferisce dati da host a device.
+\lstset {language=C++}
+\begin{lstlisting}
+cudaError_t cudaBindTexture2D(size_t* offset, const textureReference* texref, const void* devPtr, const cudaChannelFormatDesc desc, size_t width, size_t height, size_t pitch)
+\end{lstlisting}
+Infine la referenza alla texture lato host va bindata alla zona di memoria allocata sulla GPU.
+\subsubsection{Differenze d'implementazione - lato device}
+Non usando più la shared memory, il codice che la inizializzava è stato rimosso, ora i dati riguardanti l'immagine vengono letti direttamente dalla texture memory tramite la funzione:
+\lstset {language=C++}
+\begin{lstlisting}
+tex2D(textureReference, x, y)
+\end{lstlisting}
+A cui si passa il riferimento alla texture e le coordinate del pixel, traslate di 0.5f, poichè CUDA si aspetta che il centro sia a .5.
+\subsection{Differenza di risultati tra implementazione shared memory e texture memory}
+Gli istogrammi generati da shared memory e texture memory usando l'interpolazione bilineare divergono ma sono abbastanza simili.\\
+Si pensa che alcuni fattori legati alla precisione contribuiscano a queste diversità, tra cui il fatto che i valori \textalpha \enspace e \textbeta \enspace utilizzati nel calcolo dell'interpolazione tramite texture memory sono rappresentati con 9 bit a virgola fissa di cui 1 per il segno ed 8 per il valore decimale (documentazione CUDA) mentre nel kernel shared vengono rappresentati col tipo float.\\
+Si è giunti a queste conclusioni perchè se si esegue il LBP utilizzando il nearest neighbor invece dell'interpolazione bilineare i tre istogrammi (CPU, kernel shared e kernel texture) sono identici.\\
+Un'altra precisazione da fare è che per ottenere risultati identici tra il kernel shared e la CPU utilizzando l'interpolazione bilineare è necessario disattivare l'ottimizzazione fused-multiply-add (-fmad=false) durante la compilazione.
+\section{Risultati ottenuti}
+\subsection{Introduzione}
+L'implementazione è stata testata in due modi, nel primo caso per valutarne la capacità di classificazione, nel secondo per confrontare le tempistiche tra diverse versioni.\\
+L'algoritmo LBP è parametrico, quindi in entrambi i test si sono usate più coppie di parametri.\\
+I test sono stati eseguiti su una macchina con le seguenti caratteristiche:
+\begin{itemize}
+	\item Intel Core i7-4702MQ 2.2 GHz
+	\item 8 GB RAM DDR3
+	\item Nvidia GT 750M 4 GB
+	\item Windows 10 Pro 64 bit
+	\item Cuda 9.2
+\end{itemize}
+\subsection{Capacità di classificazione}
+Per testare la capacità di classificazione dell'algoritmo si è utilizzato un dataset composto da textures grayscale con risoluzione 576 x 576 suddivise in sei classi, ognuna contenente 40 texture con angoli di rotazione diversi, per un totale di 240 immagini.
+Per ogni classe si è scelta un'immagine come rappresentante e si sono calcolati i loro istogrammi.\\
+Successivamente si è fatto la stessa operazione per tutte le 240 immagini del dataset, confrontando ogni istogramma generato con i sei di riferimento.\\
+L'esperimento è stato ripetuto variando i valori dei parametri \textit{points} e \textit{radius} ed i risultati della classificazione sono riportati nelle matrici di confusione successive.\\
+Osservando i risultati si può notare come si riesce a classificare le texture in modo abbastanza corretto al variare dei parametri.\\
+In particolare abbiamo le classi canvas e seat dove tutti gli elementi sono classificati correttamente indipendentemente dai parametri, anche linsseeds ottiene buoni risultati con tutte le configurazioni.\\
+Alcune classi vengono classificate bene con una certa configurazione mentre con altre in modo meno preciso, ad esempio stone viene classificato bene con (16, 2) e (24, 3), ma con (8, 1) i risultati sono molto meno buoni.\\
+Cushion si comporta abbastanza bene con (8, 1)  ma peggiora con le altre coppie di parametri.\\
+Infine abbiamo la classe sands dove con qualsiasi configurazione c'è dell'incertezza con stone.\\
+In conclusione l'algoritmo ha una buona capacità di classificazione, che potrebbe essere probabilmente migliorata combinando i risultati derivanti dalle diverse parametrizzazioni.
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}[b]{0.15\linewidth}
+		\includegraphics[scale=0.09]{images/1.png}
+		\caption{Canvas}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.15\linewidth}
+		\includegraphics[scale=0.09]{images/2.png}
+		\caption{Cushion}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.15\linewidth}
+		\includegraphics[scale=0.09]{images/3.png}
+		\caption{Linsseeds}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.15\linewidth}
+		\includegraphics[scale=0.09]{images/4.png}
+		\caption{Sand}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.15\linewidth}
+		\includegraphics[scale=0.09]{images/5.png}
+		\caption{Seat}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.15\linewidth}
+		\includegraphics[scale=0.09]{images/6.png}
+		\caption{Stone}
+	\end{subfigure}
+		\caption{le sei classi di texture utilizzate}
+		\label{fig:ratio}
+\end{figure}
+\begin{figure}[H]
+	\center
+	\includegraphics[scale=0.32]{images/mc_all.png}
+	\caption{matrici di confusione per tre coppie di parametri che mostrano la classificazione delle texture del dataset, le righe sono l'etichetta giusta e le colonne quella predetta}
+	\label{fig:ratio}
+\end{figure}
+\subsection{Tempi d'esecuzione e speedup rispetto alla versione sequenziale}
+L'algoritmo è stato eseguito su una stessa immagine a 5 risoluzioni diverse, ognuna il quadruplo della precedente, per ogni implementazione (cpu, shared memory e texture memory) si è calcolato il tempo medio su 10 esecuzioni.\\
+I tempi dei kernel sono stati registrati tramite eventi CUDA e comprendono l'allocazione della memoria device, il trasferimento iniziale dell'immagine e finale dell'istogramma e l'esecuzione dell'algoritmo.\\
+I tempi d'esecuzione su CPU comprendono l'esecuzione dell'algoritmo sull'immagine allocata nell'heap.\\
+Come si vede dai risultati ottenuti l'algoritmo è altamente parallelizzabile poichè ogni LBP viene calcolato indipendentemente dagli altri, questo si ripercuote sui valori di speedup ottenuti, infatti indipendentemente dal valore dei parametri utilizzati e dalla risoluzione dell'immagine si ha sempre uno speedup significativo, che aumenta sia al crescere dei parametri dell'algoritmo sia alla dimensione della texture.\\
+L'utilizzo della texture memory risulta essere la migliore soluzione già a partire da risoluzioni piuttosto basse probabilmente a causa del pattern spaziale con cui si accede ai pixel, infatti a parte la risoluzione minore dove i risultati sono inferiori a quelli della shared memory, il divario di prestazioni tende ad aumentare velocemente.\\
+Si sono usate texture molto grandi per osservare l'andamento dello speedup, con la texture memory lo speedup sembrerebbe avere ancora margini di crescita all'aumentare della risoluzione, la shared memory invece sembra essere prossima a giungere ad un limite.\\
+Si può concludere dicendo che il calcolo del LBP su GPU offre enormi vantaggi in termini di prestazioni, il fatto di utilizzarlo in combinazione con l'interpolazione bilineare è molto oneroso se eseguito su CPU a differenza della GPU.\\
+Oltre alla classificazione di textures il LBP ha altre applicazioni, ad esempio il riconoscimento facciale, l'implementazione tramite GPU rende possibile esaminare frames ad alte risoluzioni anche in contesti real time.
+\begin{figure}[H]
+	\center
+	\includegraphics[scale=0.37]{images/s_all.png}
+	\caption{grafici degli speedup ottenuti variando i parametri dell'algoritmo}
+	\label{fig:ratio}
+\end{figure}
+
+
+\begin{figure}[H]
+	\center
+	\includegraphics[scale=0.37]{images/t_all.png}
+	\caption{grafici dei tempi ottenuti variando i parametri dell'algoritmo, le scale sono logaritmiche}
+	\label{fig:ratio}
+\end{figure}
+\section{Istruzioni per compilare ed eseguire il programma}
+Il programma va compilato a 64 bit sotto Windows, per assicurarsi che i risultati ottenuti tra CPU e shared siano uguali bisogna specificare l'opzione -fmad=false durante la compilazione con nvcc.\\
+È richiesta la libreria FreeImage, può essere scaricata dal \href{http://freeimage.sourceforge.net/download.html}{sito ufficiale}.\\
+Il programma può essere eseguito in due modalità:
+\begin{enumerate}
+	\item Esecuzione del LBP su una texture tramite:\\\\
+	 nomeProgramma "path" device points radius label
+	 \begin{itemize}
+	 	\item path: il path assoluto della texture, nel formato\\"C:\textbackslash\textbackslash path\textbackslash\textbackslash file\textbackslash\textbackslash nomeFile.ext"
+	 	\item device: permette la scelta tra l'esecuzione tramite CPU, kernel shared o kernel texture, specificando rispettivamente cpu, shared o texture
+	 	\item points: il parametro \textit{points} del LBP, un numero intero
+	 	\item radius: il parametro \textit{radius} del LBP, un numero decimale
+	 	\item label: un'etichetta che indica la categoria dell'immagine, se si vuole solamente eseguire l'algoritmo specificare una stringa casuale
+	 \end{itemize}
+ 	Al termine dell'esecuzione se non esistono vengono creati i file times.csv e model\_p\{\textit{points}\}\_r\{\textit{radius}\}.csv a cui viene aggiunta una riga di testo contenente il tempo d'esecuzione e l'istogramma generato.
+	\item Esecuzione delle funzioni di test dichiarate nella classe Test.h tramite:\\\\
+	nomeProgramma "path"
+	\begin{itemize}
+		\item path: il path alla cartella contenente le immagini necessarie (vedi spiegazione sottostante), nel formato "C:\textbackslash\textbackslash path\textbackslash\textbackslash cartella\textbackslash\textbackslash "
+	\end{itemize}
+	Il primo test calcola gli istogrammi su immagini di test predefinite, questi sono confrontati con quelli calcolati nelle prime fasi dello sviluppo, in modo da assicurarsi di non avere introdotto errori nelle fasi successive.\\
+	Se si volesse evitare il primo test si specifica come parametro un path non esistente ("path\textbackslash\textbackslash a\textbackslash\textbackslash caso").
+	Il secondo test genera delle immagini casuali a diverse risoluzioni e si confrontano gli istogrammi di cpu e shared per controllare che i risultati siano uguali, per la texture non è possibile (sezione 2.4).\\
+	In ognuno dei test viene controllato che la somma delle frequenze dell'istogramma sia uguale al numero di pixel dell'immagine che lo genera.
+\end{enumerate}
+La lettura dei file contenenti gli istogrammi e la classificazione tramite la formula di likelihood \ref{eq:1} viene effettuato tramite lo script python classify.py:\\\\
+python classify.py "C:\textbackslash\textbackslash 
+path\textbackslash\textbackslash file\textbackslash\textbackslash modelli.csv" "C:\textbackslash\textbackslash path\textbackslash\textbackslash file\textbackslash\textbackslash istogrammi.csv"
+\end{document}
