@@ -1,13 +1,15 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
 
 public class DBSCAN {
 
-    /*public static final void algorithm(ArrayList<Coordinate> points, float eps, int minPoints){
+   /* public static final void algorithm(ArrayList<Coordinate> points, float eps, int minPoints){
 
+        int clusterId = 1;
         for (int i = 0; i < points.size(); i++){
             final Coordinate point = points.get(i);
             if (point.isUnlabelled()){
@@ -45,52 +47,84 @@ public class DBSCAN {
             }
         }
         return true;
-    }
-
-    public static void algorithm2(ArrayList<Coordinate> coordinates, float eps, int minPoints){
-        int clusterLabel = Coordinate.NOISE + 1;
-        for (Coordinate coordinate: coordinates){
-            if (coordinate.isUnlabelled()){
-                // check if it is a core point
-
-            } else {
-                    // if it is not a core point, set to noise, maybe can be reached in future
-                    coordinate.setLabel(Coordinate.NOISE);
-            }
-        }
     }*/
 
-    public static void algorithm2(ArrayList<Coordinate> coordinates, float eps, int minPoints){
+
+
+    /*
+    function DBSCAN(dataset, eps, minPoints)
+
+        for each point in dataset:
+            if the current point doesn't belong to a cluster:
+                set its cluster as current cluster
+                enqueue the point
+                while the queue contains elements:
+                    remove the head of the queue
+                    set current point as head
+                    find the neighborhood of current point
+                    if current point is a core point:
+                        for each neighbor in neighborhood:
+                            if neighbor doesn't belong to a cluster:
+                                set its cluster as current cluster
+                            enqueue new labelled neighbors
+                if the current cluster contains only current point:
+                    label the point as noise
+                else
+
+        noiseId = 0
+        for each point in dataset:
+            point.cluster = noiseId
+
+        clusterId = 1
+        For each point in dataset:
+            if point.cluster == noiseId:
+                point.cluster = clusterId
+                queue.enqueue(point)
+            while queue is not empty:
+                currentPoint = queue.removeHead()
+                if currentPoint is a core point:
+                    for each directly density-reachable neighbor:
+                        if neighbor is noise:
+                            neighbor.cluster = clusterId
+                            queue.enqueue(neighbor)
+            if size of current cluster is one:
+                point.cluster = noiseId
+            else:
+                clusterId += 1*/
+
+
+
+
+
+    public static void algorithm(ArrayList<Coordinate> coordinates, float eps, int minPoints){
         int clusterLabel = Coordinate.NOISE + 1;
         for (Coordinate coordinate: coordinates){
             if(coordinate.isNoise()){
-                ArrayList<Coordinate> queue = new ArrayList<>();
+                final ArrayList<Coordinate> queue = getNeighborhood(coordinates, coordinate, eps);
+                if(queue.size() < minPoints) {
+                    continue;
+                }
+                for(Coordinate c: queue){
+                    if(!c.isNoise()){
+                        System.out.println("ERROR");
+                    }
+                    c.setLabel(clusterLabel);
+                }
+                queue.remove(coordinate);
                 coordinate.setLabel(clusterLabel);
-                queue.add(coordinate);
-                int added = 1;
                 while (!queue.isEmpty()){
                     final Coordinate parent = queue.remove(0);
                     final ArrayList<Coordinate> children = getNeighborhood(coordinates, parent, eps);
-
                     if (children.size() >= minPoints){
-                        ArrayList<Coordinate> alreadyVisited = new ArrayList<>();
                         for(Coordinate child: children){
                             if(child.isNoise()){
+                                queue.add(child);
                                 child.setLabel(clusterLabel);
-                            } else {
-                                alreadyVisited.add(child);
                             }
                         }
-                        children.removeAll(alreadyVisited);
-                        queue.addAll(children);
-                        added += children.size();
                     }
                 }
-                if(added > 1) {
-                    clusterLabel++;
-                } else {
-                    coordinate.setLabel(Coordinate.NOISE);
-                }
+                clusterLabel++;
             }
         }
     }
@@ -99,6 +133,7 @@ public class DBSCAN {
         ArrayList<Coordinate> neighborhood = new ArrayList<>();
         for(int i = 0; i < points.size(); i++){
             Coordinate possibleNeighbor = points.get(i);
+            // TODO < o < = ?
             if(point.distance(possibleNeighbor) < eps){
                 neighborhood.add(possibleNeighbor);
             }
@@ -137,7 +172,7 @@ public class DBSCAN {
             System.exit(2);
         }
 
-        eps = 1.1f;
+        /*eps = 3.0f;
         minPoints = 2;
         coordinates = new ArrayList<>();
         coordinates.add(new Coordinate(0, 0 ,0 ));
@@ -145,12 +180,16 @@ public class DBSCAN {
         coordinates.add(new Coordinate(2, 0 ,1 ));
         coordinates.add(new Coordinate(3, 1 ,1 ));
         coordinates.add(new Coordinate(4, 5 ,1 ));
-        coordinates.add(new Coordinate(5, 6 ,1 ));
-        coordinates.add(new Coordinate(6, 0 ,2 ));
-        coordinates.add(new Coordinate(7, 6 ,2 ));
-        coordinates.add(new Coordinate(8, 8 ,4 ));
-        coordinates.add(new Coordinate(9, 8 ,5 ));
-        DBSCAN.algorithm2(coordinates, eps, minPoints);
+        coordinates.add(new Coordinate(5, 0 ,2 ));
+        coordinates.add(new Coordinate(6, 6 ,2 ));
+        coordinates.add(new Coordinate(7, 8 ,4 ));
+        coordinates.add(new Coordinate(8, 8 ,5 ));*/
+
+        /*for (int i = 0; i < 1000; i++){
+
+        }*/
+        Collections.shuffle(coordinates);
+        DBSCAN.algorithm(coordinates, eps, minPoints);
 
         for (Coordinate coordinate: coordinates){
             System.out.println(coordinate);

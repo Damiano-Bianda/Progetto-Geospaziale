@@ -7,6 +7,7 @@ public class Coordinate {
     private double y;
     private int label = NOISE;
     public static final int NOISE = 0;
+    //public static final int UNLABELLED = -1;
 
     public Coordinate(int id, double x, double y) {
         this.id = id;
