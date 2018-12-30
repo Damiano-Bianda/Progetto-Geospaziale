@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.10)  22 DEC 2018 19:07
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (MiKTeX 2.9.6880 64-bit) (preloaded format=pdflatex 2018.12.10)  30 DEC 2018 19:32
 entering extended mode
 **./relazione.tex
 (relazione.tex
@@ -961,263 +961,123 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 
 [1
 
-{C:/Users/damia/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 71--75
-
- []
-
-[2]
-Underfull \hbox (badness 10000) in paragraph at lines 83--85
-
- []
-
+{C:/Users/damia/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}] [2]
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 92.
+(Font)              <9> on input line 68.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 92.
-
-Overfull \hbox (29.23077pt too wide) detected at line 94
-[][]\OML/cmm/m/it/10 p \OT1/cmr/m/n/10 = \OML/cmm/m/it/10 tex\OT1/cmr/m/n/10 (\
-OML/cmm/m/it/10 x; y\OT1/cmr/m/n/10 )(1 \OMS/cmsy/m/n/10   \OML/cmm/m/it/10 \O
-T1/cmr/m/n/10 )(1 \OMS/cmsy/m/n/10   \OML/cmm/m/it/10 \OT1/cmr/m/n/10 ) + \OML
-/cmm/m/it/10 tex\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x \OT1/cmr/m/n/10 + 1\OML/cmm
-/m/it/10 ; y\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 \OT1/cmr/m/n/10 (1 \OMS/cmsy/m/n
-/10   \OML/cmm/m/it/10 \OT1/cmr/m/n/10 ) + \OML/cmm/m/it/10 tex\OT1/cmr/m/n/10
- (\OML/cmm/m/it/10 x; y \OT1/cmr/m/n/10 + 1)(1 \OMS/cmsy/m/n/10   \OML/cmm/m/it
-/10 \OT1/cmr/m/n/10 )\OML/cmm/m/it/10  \OT1/cmr/m/n/10 + \OML/cmm/m/it/10 tex
-\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 x \OT1/cmr/m/n/10 + 1\OML/cmm/m/it/10 ; y \OT
-1/cmr/m/n/10 + 1)\OML/cmm/m/it/10 []
- []
-
-<images/bilinear_complete.png, id=112, 740.0147pt x 301.8778pt>
-File: images/bilinear_complete.png Graphic file (type png)
-<use images/bilinear_complete.png>
-Package pdftex.def Info: images/bilinear_complete.png  used on input line 98.
-(pdftex.def)             Requested size: 345.0pt x 140.73561pt.
-
-Underfull \hbox (badness 10000) in paragraph at lines 94--101
-
- []
-
-[3]
-Overfull \hbox (1.86183pt too wide) in paragraph at lines 104--105
-[]\OT1/cmr/m/n/10 void sur-roun-ding-Bi-li-near-Poin-ts(const int poin-ts, con-
-st float ra-dius, Point**
- []
-
-
-Overfull \hbox (9.77858pt too wide) in paragraph at lines 110--111
-[]\OT1/cmr/m/n/10 void co-py-Nei-gh-bo-rhoo-d-Coord-sIn-Con-stant-Me-mo-ry(Poin
-t* poin-ts, int length) 
- []
-
-
-Overfull \hbox (11.22299pt too wide) in paragraph at lines 112--113
-[]\OT1/cmr/m/n/10 Histogram* Lo-cal-Bi-na-ry-Pat-ternG-PU-Sha-red-Me-mo-ry(Gray
-ScaleImage* gray-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 115--119
-
- []
-
-LaTeX Font Info:    Try loading font information for OML+cmr on input line 120.
+(Font)              <5> on input line 68.
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 75.
 
 ("C:\Users\damia\AppData\Local\Programs\MiKTeX 2.9\tex\latex\base\omlcmr.fd"
 File: omlcmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 120.
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <9> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 75.
 
-Overfull \hbox (0.98677pt too wide) in paragraph at lines 120--122
-\OT1/cmr/m/n/10 void se-lec-t-Ker-nel(int dy-na-mi-cI-te-ra-tion, bool bi-li-ne
-ar, int share-d-Si-ze, Gray-
- []
-
-[4 <./images/bilinear_complete.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 129--135
+Underfull \hbox (badness 10000) in paragraph at lines 108--114
 
  []
 
-
-Overfull \hbox (3.33398pt too wide) in paragraph at lines 136--137
-\OT1/cmr/m/n/10 Sca-leI-ma-ge, un-si-gned char* share-d-Ti-le, int bor-der-Leng
-th, int share-d-Width,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 139--143
-
- []
-
-[5]
-Underfull \hbox (badness 10000) in paragraph at lines 148--151
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 155--159
-
- []
-
-[6]
-Underfull \hbox (badness 10000) in paragraph at lines 164--167
-
- []
-
-
-("C:\Users\damia\AppData\Local\Programs\MiKTeX 2.9\tex\latex\listings\lstlang1.
-sty"
-File: lstlang1.sty 2018/09/02 1.7 listings language file
-)
-("C:\Users\damia\AppData\Local\Programs\MiKTeX 2.9\tex\latex\listings\lstlang1.
-sty"
-File: lstlang1.sty 2018/09/02 1.7 listings language file
-)
-("C:\Users\damia\AppData\Local\Programs\MiKTeX 2.9\tex\latex\listings\lstmisc.s
-ty"
-File: lstmisc.sty 2018/09/02 1.7 (Carsten Heinz)
-)
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 188.
+[3]
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 188.
- [7] [8]
-<images/1.png, id=157, 578.16pt x 578.16pt>
-File: images/1.png Graphic file (type png)
-<use images/1.png>
-Package pdftex.def Info: images/1.png  used on input line 239.
-(pdftex.def)             Requested size: 52.03215pt x 52.03215pt.
-<images/2.png, id=158, 578.16pt x 578.16pt>
-File: images/2.png Graphic file (type png)
-<use images/2.png>
-Package pdftex.def Info: images/2.png  used on input line 243.
-(pdftex.def)             Requested size: 52.03215pt x 52.03215pt.
-<images/3.png, id=159, 578.16pt x 578.16pt>
-File: images/3.png Graphic file (type png)
-<use images/3.png>
-Package pdftex.def Info: images/3.png  used on input line 247.
-(pdftex.def)             Requested size: 52.03215pt x 52.03215pt.
-<images/4.png, id=160, 578.16pt x 578.16pt>
-File: images/4.png Graphic file (type png)
-<use images/4.png>
-Package pdftex.def Info: images/4.png  used on input line 251.
-(pdftex.def)             Requested size: 52.03215pt x 52.03215pt.
-<images/5.png, id=161, 578.16pt x 578.16pt>
-File: images/5.png Graphic file (type png)
-<use images/5.png>
-Package pdftex.def Info: images/5.png  used on input line 255.
-(pdftex.def)             Requested size: 52.03215pt x 52.03215pt.
-<images/6.png, id=162, 578.16pt x 578.16pt>
-File: images/6.png Graphic file (type png)
-<use images/6.png>
-Package pdftex.def Info: images/6.png  used on input line 259.
-(pdftex.def)             Requested size: 52.03215pt x 52.03215pt.
-<images/mc_all.png, id=163, 707.64375pt x 1640.1275pt>
-File: images/mc_all.png Graphic file (type png)
-<use images/mc_all.png>
-Package pdftex.def Info: images/mc_all.png  used on input line 267.
-(pdftex.def)             Requested size: 226.45062pt x 524.85153pt.
-
-
-LaTeX Warning: `!h' float specifier changed to `!ht'.
-
-[9]
-Overfull \vbox (127.88368pt too high) has occurred while \output is active []
-
-
-[10 <./images/1.png (PNG copy)> <./images/2.png (PNG copy)> <./images/3.png (PN
-G copy)> <./images/4.png (PNG copy)> <./images/5.png (PNG copy)> <./images/6.pn
-g (PNG copy)> <./images/mc_all.png>]
-<images/s_all.png, id=176, 642.4pt x 1445.4pt>
-File: images/s_all.png Graphic file (type png)
-<use images/s_all.png>
-Package pdftex.def Info: images/s_all.png  used on input line 282.
-(pdftex.def)             Requested size: 237.68428pt x 534.78963pt.
- [11]
-Overfull \vbox (6.78963pt too high) has occurred while \output is active []
-
-
-[12 <./images/s_all.png>]
-<images/t_all.png, id=187, 642.4pt x 1445.4pt>
-File: images/t_all.png Graphic file (type png)
-<use images/t_all.png>
-Package pdftex.def Info: images/t_all.png  used on input line 290.
-(pdftex.def)             Requested size: 237.68428pt x 534.78963pt.
-
-Overfull \vbox (18.78963pt too high) has occurred while \output is active []
-
-
-[13 <./images/t_all.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 299--301
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 309--311
-
- []
-
-
-LaTeX Warning: Reference `eq:1' on page 14 undefined on input line 319.
-
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 322.
-
-Underfull \hbox (badness 10000) in paragraph at lines 319--322
-
- []
-
-
-Overfull \hbox (15.30644pt too wide) in paragraph at lines 319--322
-\OT1/cmr/m/n/10 python clas-si-fy.py "C:\OMS/cmsy/m/n/10 nn\OT1/cmr/m/n/10 path
-\OMS/cmsy/m/n/10 nn\OT1/cmr/m/n/10 file\OMS/cmsy/m/n/10 nn\OT1/cmr/m/n/10 model
-li.csv" "C:\OMS/cmsy/m/n/10 nn\OT1/cmr/m/n/10 path\OMS/cmsy/m/n/10 nn\OT1/cmr/m
-/n/10 file\OMS/cmsy/m/n/10 nn\OT1/cmr/m/n/10 istogrammi.csv" 
- []
-
-[14]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 322.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 117.
+ [4]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 148.
+ [5]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 148.
  (relazione.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 322.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 322.
-Package rerunfilecheck Info: File `relazione.out' has not changed.
-(rerunfilecheck)             Checksum: B44A5AEE7AE200871C51BD6CA9652F0A;1999.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 148.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 148.
 
 
-LaTeX Warning: There were undefined references.
+Package rerunfilecheck Warning: File `relazione.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
 
+Package rerunfilecheck Info: Checksums for `relazione.out':
+(rerunfilecheck)             Before: D0AA1F77A819379978F070103FA90E8B;2119
+(rerunfilecheck)             After:  36EDBA351313E27A9D8E8264FB8D601B;407.
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 19928 strings out of 492969
- 344140 string characters out of 3126585
- 719454 words of memory out of 3000000
- 23605 multiletter control sequences out of 15000+200000
- 538843 words of font info for 44 fonts, out of 3000000 for 9000
+ 19737 strings out of 492969
+ 341337 string characters out of 3126585
+ 616547 words of memory out of 3000000
+ 23394 multiletter control sequences out of 15000+200000
+ 538189 words of font info for 42 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,10n,63p,805b,1237s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts
-/cm/cmbx10.pfb><C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
-blic/amsfonts/cm/cmbx12.pfb><C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/f
-onts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/damia/AppData/Local/Programs/
-MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/damia/AppData/Lo
-cal/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/dami
-a/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C
-:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/
-cmr12.pfb><C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/
-amsfonts/cm/cmr17.pfb><C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/t
-ype1/public/amsfonts/cm/cmr9.pfb><C:/Users/damia/AppData/Local/Programs/MiKTeX 
-2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/damia/AppData/Local/Pro
-grams/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy9.pfb><C:/Users/damia/AppDa
-ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/User
-s/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/cbgreek/grmn1000.p
-fb>
-Output written on relazione.pdf (14 pages, 1799812 bytes).
+ 42i,6n,63p,805b,1814s stack positions out of 5000i,500n,10000p,200000b,50000s
+pdfTeX warning (dest): name{section.4} has been referenced but does not exist
+, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.3.3} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.3.2} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.3.1} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{section.3} has been referenced but does not exist, 
+replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.2.6} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.2.5.2} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.2.5.1} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.2.5} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.2.4.6} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.2.4.5} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.2.4.4} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.2.4.3} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.2.4.2} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.2.4.1} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.2.4} has been referenced but does not ex
+ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsubsection.2.3.1} has been referenced but does n
+ot exist, replaced by a fixed one
+
+pdfTeX warning (dest): name{subsection.2.3} has been referenced but does not ex
+ist, replaced by a fixed one
+
+<C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/c
+m/cmbx12.pfb><C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/publ
+ic/amsfonts/cm/cmbx9.pfb><C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/font
+s/type1/public/amsfonts/cm/cmmi9.pfb><C:/Users/damia/AppData/Local/Programs/MiK
+TeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/damia/AppData/Local/
+Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/damia/Ap
+pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Us
+ers/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr9
+.pfb><C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfo
+nts/cm/cmsy10.pfb><C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9/fonts/type1
+/public/amsfonts/cm/cmsy9.pfb><C:/Users/damia/AppData/Local/Programs/MiKTeX 2.9
+/fonts/type1/public/cbgreek/grmn1000.pfb>
+Output written on relazione.pdf (5 pages, 143915 bytes).
 PDF statistics:
- 258 PDF objects out of 1000 (max. 8388607)
- 58 named destinations out of 1000 (max. 500000)
- 235 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 257 PDF objects out of 1000 (max. 8388607)
+ 100 named destinations out of 1000 (max. 500000)
+ 201 words of extra memory for PDF output out of 10000 (max. 10000000)
 

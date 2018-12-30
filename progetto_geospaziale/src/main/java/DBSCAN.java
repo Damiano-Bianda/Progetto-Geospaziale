@@ -1,13 +1,10 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 
 public class DBSCAN {
 
-   /* public static final void algorithm(ArrayList<Coordinate> points, float eps, int minPoints){
+   /*public static final void algorithm(ArrayList<Coordinate> points, float eps, int minPoints){
 
         int clusterId = 1;
         for (int i = 0; i < points.size(); i++){
@@ -22,16 +19,22 @@ public class DBSCAN {
     }
 
     private static boolean expandCluster(ArrayList<Coordinate> points, Coordinate point, int clusterId, float eps, int minPoints) {
-        ArrayList<Coordinate> neighborhood = getNeighborhood(points, point, eps);
+        ArrayList<Coordinate> neighborhood = neighborhood(points, point, eps);
         if(neighborhood.size() < minPoints){
             point.setLabel(Coordinate.NOISE);
             return false;
         } else {
             point.setLabel(clusterId);
+
+            for(Coordinate coordinate: neighborhood){
+
+                coordinate.setLabel(clusterId);
+            }
+
             neighborhood.remove(point);
             while (!neighborhood.isEmpty()){
                 Coordinate neighbor = neighborhood.get(neighborhood.size() - 1);
-                ArrayList<Coordinate> newNeighborhood = getNeighborhood(points, neighbor, eps);
+                ArrayList<Coordinate> newNeighborhood = neighborhood(points, neighbor, eps);
                 if (newNeighborhood.size() >= minPoints){
                     for (int i = 0; i < newNeighborhood.size(); i++){
                         Coordinate newPoint = newNeighborhood.get(i);
@@ -93,33 +96,73 @@ public class DBSCAN {
                 clusterId += 1*/
 
 
+    /*
+
+void initDataSet(dataset):
+    foreach point in points:
+            point.cluster := NOISE
+
+bool isCorePoint(neighborhood, minPoints):
+    return neighborhood.size() >= minPoints
+
+List<Point> neighborhood(points , point, epsilon):
+    neighbors = []
+    foreach candidateNeighbor in points:
+        if distance(candidateNeighbor, point) <= epsilon:
+            neighbors.add(candidateNeighbor)
+    return neighbors
+
+float distance(pointA, pointB):
+    return sqrt((pointA.x - pointB.x)^2 + (pointA.y - pointB.y)^2))
+
+void DBSCAN(points, epsilon, minPoints):
+
+    initDataSet(points)
+
+    clusterLabel := 1
+
+    foreach point in points:
+        if point.cluster := NOISE:
+            neighbors := neighborhood(points, point, epsilon)
+            if isCorePoint(neighborhood, minPoints):
+                foreach neighbor in neighbors:
+                    neighbor.cluster := clusterLabel
+                neighbors.remove(point)
+                while neighbors.size() > 0:
+                    currentPoint = neighbors.getFirst()
+                    currentNeighborhood = neighborhood(points, currentPoint, epsilon)
+                    if isCorePoint(currentNeighborhood, currentPoint):
+                        foreach currentNeighbor in currentNeighborhood:
+                            if currentNeighbor.cluster = NOISE
+                                neighbor.add(currentNeighbor)
+                                neighbor.cluster = clusterLabel
+            clusterLabel := clusterLabel + 1
 
 
+     */
 
-    public static void algorithm(ArrayList<Coordinate> coordinates, float eps, int minPoints){
+
+ public static void algorithm(ArrayList<Coordinate> points, float eps, int minPoints){
         int clusterLabel = Coordinate.NOISE + 1;
-        for (Coordinate coordinate: coordinates){
-            if(coordinate.isNoise()){
-                final ArrayList<Coordinate> queue = getNeighborhood(coordinates, coordinate, eps);
+        for (Coordinate point: points){
+            if(point.isNoise()){
+                final ArrayList<Coordinate> queue = neighborhood(points, point, eps);
                 if(queue.size() < minPoints) {
                     continue;
                 }
                 for(Coordinate c: queue){
-                    if(!c.isNoise()){
-                        System.out.println("ERROR");
-                    }
                     c.setLabel(clusterLabel);
                 }
-                queue.remove(coordinate);
-                coordinate.setLabel(clusterLabel);
+                queue.remove(point);
+                //point.setLabel(clusterLabel); // credo che non serve
                 while (!queue.isEmpty()){
-                    final Coordinate parent = queue.remove(0);
-                    final ArrayList<Coordinate> children = getNeighborhood(coordinates, parent, eps);
-                    if (children.size() >= minPoints){
-                        for(Coordinate child: children){
-                            if(child.isNoise()){
-                                queue.add(child);
-                                child.setLabel(clusterLabel);
+                    final Coordinate currentPoint = queue.remove(0);
+                    final ArrayList<Coordinate> currentNeighborhood = neighborhood(points, currentPoint, eps);
+                    if (currentNeighborhood.size() >= minPoints){
+                        for(Coordinate currentNeighbor: currentNeighborhood){
+                            if(currentNeighbor.isNoise()){
+                                queue.add(currentNeighbor);
+                                currentNeighbor.setLabel(clusterLabel);
                             }
                         }
                     }
@@ -129,12 +172,18 @@ public class DBSCAN {
         }
     }
 
-    private static ArrayList<Coordinate> getNeighborhood(ArrayList<Coordinate> points, Coordinate point, float eps) {
+
+    private static ArrayList<Coordinate> neighborhood(ArrayList<Coordinate> points, Coordinate point, float eps) {
         ArrayList<Coordinate> neighborhood = new ArrayList<>();
+
+
+
         for(int i = 0; i < points.size(); i++){
+
+
             Coordinate possibleNeighbor = points.get(i);
-            // TODO < o < = ?
-            if(point.distance(possibleNeighbor) < eps){
+
+            if(point.distance(possibleNeighbor) <= eps){
                 neighborhood.add(possibleNeighbor);
             }
         }
@@ -164,6 +213,7 @@ public class DBSCAN {
                             new Double(split[4])));
                 }
             }
+            bufferedReader.close();
         } catch (FileNotFoundException e) {
             System.err.println("File \""+ path +"\" not found, see error.log");
             System.exit(1);
@@ -172,36 +222,61 @@ public class DBSCAN {
             System.exit(2);
         }
 
-        /*eps = 3.0f;
-        minPoints = 2;
+        /*eps = 1.0f;
+        minPoints = 0;
         coordinates = new ArrayList<>();
         coordinates.add(new Coordinate(0, 0 ,0 ));
-        coordinates.add(new Coordinate(1, 6 ,1 ));
+        coordinates.add(new Coordinate(1, 6 ,0 ));
         coordinates.add(new Coordinate(2, 0 ,1 ));
         coordinates.add(new Coordinate(3, 1 ,1 ));
         coordinates.add(new Coordinate(4, 5 ,1 ));
-        coordinates.add(new Coordinate(5, 0 ,2 ));
-        coordinates.add(new Coordinate(6, 6 ,2 ));
-        coordinates.add(new Coordinate(7, 8 ,4 ));
-        coordinates.add(new Coordinate(8, 8 ,5 ));*/
+        coordinates.add(new Coordinate(5, 6 ,1 ));
+        coordinates.add(new Coordinate(6, 0 ,2 ));
+        coordinates.add(new Coordinate(7, 6 ,2 ));
+        coordinates.add(new Coordinate(8, 8 ,8 ));*/
 
-        /*for (int i = 0; i < 1000; i++){
 
+        /*coordinates.clear();
+
+        eps = 15;
+        minPoints = 100;
+
+        for(int angle = 0; angle < 360; angle+=10){
+            for(int i=0 ;i < 50; i++){
+                coordinates.add(new Coordinate(i+1, Math.cos(angle)*100 + Math.random()*20, Math.sin(angle)* 100 + Math.random()*20));
+            }
         }*/
-        Collections.shuffle(coordinates);
-        DBSCAN.algorithm(coordinates, eps, minPoints);
+/*
+        for(int i = 0; i < 50; i++){
+            coordinates.add(new Coordinate(i + 1, Math.random()*eps + 50, Math.random()* eps + 50));
+        }
+        for(int i = 50; i < 100; i++){
+            coordinates.add(new Coordinate(i + 1, 400 + Math.random()*eps + 50, 400 + Math.random()* eps + 50));
+        }*/
 
-        for (Coordinate coordinate: coordinates){
+
+
+        //Collections.shuffle(coordinates);
+        final long start = System.currentTimeMillis();
+        DBSCAN.algorithm(coordinates, eps, minPoints);
+        System.out.println(System.currentTimeMillis() - start);
+
+    /*   for (Coordinate coordinate: coordinates){
             System.out.println(coordinate);
+        }*/
+
+
+        try {
+            final BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("results.csv"));
+            bufferedWriter.write("ID,X,Y,LABEL\n");
+            for(Coordinate coordinate: coordinates){
+                bufferedWriter.write(coordinate.toString() + "\n");
+            }
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        /*Coordinate c255 = coordinates.get(255);
-        Coordinate c340 = coordinates.get(340);
-        Coordinate c341 = coordinates.get(341);
-        Coordinate c473 = coordinates.get(473);
-        Coordinate c486 = coordinates.get(486);
-
-        System.out.println("end");*/
 
 
 

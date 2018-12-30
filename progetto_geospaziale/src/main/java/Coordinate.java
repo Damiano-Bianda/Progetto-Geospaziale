@@ -2,18 +2,20 @@ import java.util.Objects;
 
 public class Coordinate {
 
+    private static double[][] distanceMatrix;
     private int id;
     private double x;
     private double y;
     private int label = NOISE;
     public static final int NOISE = 0;
-    //public static final int UNLABELLED = -1;
+   // public static final int UNLABELLED = -1;
 
     public Coordinate(int id, double x, double y) {
         this.id = id;
         this.x = x;
         this.y = y;
     }
+
 
     public double distance(Coordinate coordinate){
         return Math.sqrt(Math.pow(coordinate.x - this.x, 2) + Math.pow(coordinate.y - this.y , 2));
@@ -49,7 +51,7 @@ public class Coordinate {
         return Objects.hash(id);
     }
 
-    /*public boolean isUnlabelled() {
+   /*public boolean isUnlabelled() {
         return this.label == Coordinate.UNLABELLED;
     }*/
 
@@ -63,7 +65,6 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return id + "\t" + x +
-                "\t" + y + "\tcluster:" + label;
+        return id + "," + x + ","+ y + "," + label;
     }
 }
