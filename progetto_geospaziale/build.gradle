@@ -2,6 +2,11 @@ plugins {
     id 'java'
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': 'App'
+    }
+}
 
 group 'org.unimi.progetto_geospaziale'
 version '1.0-SNAPSHOT'

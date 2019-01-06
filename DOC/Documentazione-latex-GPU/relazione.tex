@@ -28,13 +28,16 @@
 	\maketitle
 \begin{abstract}
 	%\boldmath\\
-	In questo progetto si vuole implementare l'algoritmo di clustering DBSCAN tramite Java.\\
-	Dato un insieme di coordinate proiettate, queste vengono classificate secondo il cluster d'appartenenza o come outliers.\\
-	Infine i risultati ottenuti sono rappresentati attraverso una mappa utilizzando il software QGIS.
+	Dato un insieme di punti nello spazio, la cui posizione è determinata da coordinate proiettate, si voglio identificare i clusters presenti ed assegnare ogni elemento ad ognuno di essi o etichettarlo come rumore.\\
+	L'algoritmo DBSCAN è un algoritmo partitivo basato sulla densità che permette di raggiungere l'obiettivo prefissato, quindi in questo progetto ne è stata implementata una versiona Java per analizzare un insieme di posizioni.\\
+	Infine i risultati ottenuti sono stati rappresentati su una mappa utilizzando il software QGIS.
 \end{abstract}
 \section{Algoritmo}
 \subsection{Introduzione}
-DBSCAN è un algoritmo di clustering partitivo basato sulla densità. I principali vantaggi sono che è possibile scoprire clusters di forme arbitrarie (dimensioni e forme differenti) ed identificare gli outliers, ossia i punti all'infuori di un area densamente popolata e quindi non appartenenti a nessun cluster. I svantaggi sono invece che essendo un algoritmo parametrico è necessario definire dei parametri in base al tipo di dati da analizzare e che alcuni dataset presentano il problema della densità variabile, ossia sono presenti più cluster ma a densità diverse e quindi dati dei parametri non è possibile in un esecuzione identificarli tutti.
+DBSCAN è un algoritmo di clustering partitivo basato sulla densità, questo significa che è in grado di assegnare ogni punto appartente ad un dataset ad un solo cluster, oppure identificarlo come rumore qualora si trovasse in una zona nello spazio dove la densità di elementi è bassa.\\
+I principali vantaggi sono che è possibile scoprire clusters di forme arbitrarie (dimensioni e forme differenti) ed identificare i dati che rappresentano rumore, ossia i punti all'infuori di un area densamente popolata e quindi non appartenenti a nessun cluster.\\
+I svantaggi sono invece che essendo un algoritmo parametrico è necessario definire dei parametri in base al tipo di dati da analizzare e che alcuni dataset presentano il problema della densità variabile, ossia sono presenti più cluster ma di densità diverse e quindi dato un set di parametri non è possibile identificarli tutti in modo corretto.
+\newpage
 \subsection{Definizioni}
 DBSCAN è parametrizzato tramite \textepsilon\enspace e MinPoints.\\
 Il vicinato di un punto sono tutti i punti che ricadono nel cerchio con centro pari alla sua coordinata e raggio \textepsilon.\\
@@ -54,17 +57,22 @@ Le definizioni seguenti descrivono un rapporto di connessione tra i punti e serv
 	un punto p è detto density-connected ad un punto q se c'è un punto r tale che p e q sono density-reachable da r
 \end{itemize}
 Quindi un cluster è un insieme massimo di punti density-connected.
+
+Queste definizioni definiscono concetto di cluster, infatti quest'ultimo è un insieme massimo di punti density-connected, quindi di core e border points, che rispettivamente determinano l'espansione del cluster e il suo arresto.
 \subsection{Esecuzione di DBSCAN}
-DBSCAN itera su tutti i punti presenti nel dataset e per ognuno si determina se è un core point.\\
-In caso positivo si crea un cluster che viene espanso coi punti presenti nel suo vicinato.\\
-Il processo si ripete iterativamente controllando i punti appena aggiunti, se a loro volta sono core point viene aggiunto il loro vicinato e così via fin quando tutti i punti density-reachable sono stati inglobati nel cluster.\\
-Il vicinato non viene aggiunto al cluster quando un punto è border point, poichè non esistono punti directly density-reachable da questo.\\
-Una volta terminato l'algoritmo si ottiene un dataset con i suoi elementi etichettati secondo i differenti cluster o come noise.
+DBSCAN itera una sola volta su tutti i punti presenti nel dataset e per ognuno che non appartiene ad un cluster si determina se è un core point.\\
+Se non lo è viene etichettato come noise, questa situazione non è definitiva in quanto il punto potrebbe essere successivamente assegnato ad un altro cluster, durante l'espansione di quest'ultimo.\\
+Se invece è un core point si crea un nuovo cluster contenente il punto ed il suo vicinato, ossia i punti directly density-reachable da esso.\\
+Successivamente il cluster appena creato viene espanso, quindi per ogni vicino appena inserito si determina se è un border point oppure un core point, se si verifica la seconda situazione il vicinato del che attualmente si sta considerando viene aggiunto al cluster ed ogni elemento deve essere a sua volta controllato ricorsivamente tramite questo processo.
+Se uno dei vicini è invece un border point semplicemente il suo vicinato non viene aggiunto al cluster.
+L'espansione si ferma quando non ci sono più vicini da controllare, la dimensione del cluster è stata massimizzata.
 
 \pagebreak
 \section{Implementazione}
 \subsection{Pseudocodice}
-\begin{lstlisting}
+\begin{lstlisting}[
+basicstyle=\tiny, %or \small or \footnotesize etc.
+]
 NOISE := 0
 
 void initDataSet(dataset):
@@ -113,7 +121,9 @@ Se il nuovo elemento estratto risulta anch'esso essere un core point gli element
 Quando la coda è vuota significa che ogni elemento density-reachable a partire da quello iniziale è stato assegnato al cluster, quindi viene incrementato l'id globale che identifica il cluster corrente e si procede a iterare sui nodi ancora classificati come NOISE.\\
 
 \subsection{Codice}
-\begin{lstlisting}
+\begin{lstlisting}[
+basicstyle=\tiny, %or \small or \footnotesize etc.
+]
 public static void DBSCAN(ArrayList<Coordinate> points, float eps, int minPoints){
 	int clusterLabel = Coordinate.NOISE + 1;
 	for (Coordinate point: points){
@@ -145,4 +155,32 @@ public static void DBSCAN(ArrayList<Coordinate> points, float eps, int minPoints
 }
 \end{lstlisting}
 
+L'implementazione tramite Java è composta da due classi:
+\begin{itemize}
+	\item Coordinate\\
+	Ogni istanza della classe Coordinate è un punto nello spazio.\\
+	I campi consistono nelle coordinate x,y ed una label che identifica il cluster d'appartenenza o se si tratta di noise.
+	Mette a disposizione il metodo distance che calcola la distanza euclidea tra se stesso ed un altra istanza di Coordinate
+	\item DBSCAN\\
+	Il metodo DBSCAN esegue l'algoritmo su un insieme di punti, l'implementazione è identica a quella descritta tramite pseudocodice. Per implementare il processo di espansione viene utilizzata una lista concatenata (LinkedList di Java) in modo che la rimozione e l'inserimento degli elementi all'inizio per simulare una coda FIFO.
+\end{itemize}
+L'implementazione tramite Java segue i passaggi descritti nel pseudocodice
+\newpage
+\subsection{Risultati ottenuti}
+L'algoritmo è stato eseguito con i parametri \textepsilon=300 e minPoints=20, sono stati identificati due clusters e cinque punti sono stati classificati come rumore.
+\begin{figure}[H]
+	\center
+	\includegraphics[scale=0.50]{images/mappa.png}
+	\caption{Risultati dell'esecuzione di DBSCAN(\textepsilon=300, minPoints=20)}
+	\label{fig:ratio}
+\end{figure}
+\newpage
+In questa mappa si può avere un intuizione visiva di come l'algoritmo DBSCAN opera, le aree più bianche sono quelle dove c'è maggiore densità di punti. L'immagine è stata ottenuta applicando un buffer di raggio 300 e colore bianco trasparente attorno ad ogni punto.
+\begin{figure}[H]
+	\center
+	\includegraphics[scale=0.50]{images/mappa_densita.png}
+	\caption{Rappresentazione della densità}
+	\label{fig:ratio}
+\end{figure}
 \end{document}
+
