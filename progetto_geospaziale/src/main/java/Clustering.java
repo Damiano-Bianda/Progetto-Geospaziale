@@ -40,6 +40,37 @@ public class Clustering {
        }
    }
 
+    public static void DBSCAN2(ArrayList<Point> points, float eps, int minPoints){
+       int clusterId = Point.NOISE + 1;
+       for (Point point: points){
+            if (point.getLabel() == -1){
+                boolean cluster = false;
+                point.setLabel(Point.NOISE);
+                LinkedList<Point> queue = new LinkedList<>();
+                queue.add(point);
+                while(!queue.isEmpty()){
+                    final Point p = queue.remove(0);
+                    final LinkedList<Point> neighborhood = neighborhood(points, p, eps);
+                    if(neighborhood.size() >= minPoints){
+                        for (Point neighbor: neighborhood){
+                            // non appartiene ad un cluster
+                            if(neighbor.getLabel() == -1 || neighbor.getLabel() == 0) {
+                                if(neighbor.getLabel() == -1){
+                                    queue.add(neighbor);
+                                }
+                                neighbor.setLabel(clusterId);
+                            }
+                        }
+                        cluster = true;
+                    }
+                }
+                if(cluster){
+                    clusterId++;
+                }
+            }
+        }
+    }
+
     /**
      * Returns a list containing the neighborhood (directly density-reachable points) of a point comprised itself
      * @param points list of all points

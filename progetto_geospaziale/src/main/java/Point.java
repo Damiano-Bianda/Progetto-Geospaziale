@@ -82,4 +82,21 @@ public class Point {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public int getLabel() {
+        return this.label;
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
 }
