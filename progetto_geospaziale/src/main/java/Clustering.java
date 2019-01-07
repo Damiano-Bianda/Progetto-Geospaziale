@@ -24,7 +24,6 @@ public class Clustering {
                     final LinkedList<Point> neighborhood = neighborhood(points, p, eps);
                     if(neighborhood.size() >= minPoints){
                         for (Point neighbor: neighborhood){
-                            // non appartiene ad un cluster
                             if(!neighbor.belongToACluster()) {
                                 if(!neighbor.isVisited()){
                                     queue.add(neighbor);
