@@ -5,7 +5,8 @@ public class Point {
     private int id;
     private double x;
     private double y;
-    private int label = NOISE;
+    private int label = UNVISITED;
+    public static final int UNVISITED = -1;
     public static final int NOISE = 0;
 
     /**
@@ -43,6 +44,23 @@ public class Point {
      */
     public boolean isNoise() {
         return this.label == Point.NOISE;
+    }
+
+
+    /**
+     * Checks if this point belong to a cluster
+     * @return true if label has the id of a cluster, false otherwise
+     */
+    public boolean belongToACluster(){
+        return this.label > 0;
+    }
+
+    /**
+     * Checks if this point has already been visited, i.e. if it is NOISE or belong to a cluster
+     * @return true il label is UNVISITED, false otherwise
+     */
+    public boolean isVisited(){
+        return this.label != -1;
     }
 
     /**

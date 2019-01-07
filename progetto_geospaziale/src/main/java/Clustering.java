@@ -11,40 +11,11 @@ public class Clustering {
      * @param eps the radius that define which elements are directly density-reachable from another
      * @param minPoints the number of points that a point must have in its neighborhood to be a core-point
      */
-   public static void DBSCAN(ArrayList<Point> points, float eps, int minPoints){
-       int clusterLabel = Point.NOISE + 1;
-       for (Point point: points){
-           if(point.isNoise()){
-               final LinkedList<Point> queue = neighborhood(points, point, eps);
-               if(queue.size() < minPoints) {
-                   continue;
-               }
-               for(Point c: queue){
-                   c.setLabel(clusterLabel);
-               }
-               queue.remove(point);
-               while (!queue.isEmpty()){
-                   final Point currentPoint = queue.remove(0);
-                   final LinkedList<Point> currentNeighborhood = neighborhood(points, currentPoint, eps);
-                   if (currentNeighborhood.size() >= minPoints){
-                       for(Point currentNeighbor: currentNeighborhood){
-                           if(currentNeighbor.isNoise()){
-                               queue.add(currentNeighbor);
-                               currentNeighbor.setLabel(clusterLabel);
-                           }
-                       }
-                   }
-               }
-               clusterLabel++;
-           }
-       }
-   }
-
-    public static void DBSCAN2(ArrayList<Point> points, float eps, int minPoints){
-       int clusterId = Point.NOISE + 1;
-       for (Point point: points){
-            if (point.getLabel() == -1){
-                boolean cluster = false;
+    public static void DBSCAN(ArrayList<Point> points, float eps, int minPoints){
+        int clusterId = Point.NOISE + 1;
+        for (Point point: points){
+            if (!point.isVisited()){
+                boolean clusterCreated = false;
                 point.setLabel(Point.NOISE);
                 LinkedList<Point> queue = new LinkedList<>();
                 queue.add(point);
@@ -54,17 +25,17 @@ public class Clustering {
                     if(neighborhood.size() >= minPoints){
                         for (Point neighbor: neighborhood){
                             // non appartiene ad un cluster
-                            if(neighbor.getLabel() == -1 || neighbor.getLabel() == 0) {
-                                if(neighbor.getLabel() == -1){
+                            if(!neighbor.belongToACluster()) {
+                                if(!neighbor.isVisited()){
                                     queue.add(neighbor);
                                 }
                                 neighbor.setLabel(clusterId);
                             }
                         }
-                        cluster = true;
+                        clusterCreated = true;
                     }
                 }
-                if(cluster){
+                if(clusterCreated){
                     clusterId++;
                 }
             }
