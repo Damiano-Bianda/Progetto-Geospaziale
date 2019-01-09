@@ -20,9 +20,9 @@ public class Clustering {
                 LinkedList<Point> queue = new LinkedList<>();
                 queue.add(point);
                 while(!queue.isEmpty()){
-                    final Point p = queue.remove(0);
-                    final LinkedList<Point> neighborhood = neighborhood(points, p, eps);
-                    if(neighborhood.size() >= minPoints){
+                    Point p = queue.remove(0);
+                    LinkedList<Point> neighborhood = neighborhood(points, p, eps);
+                    if(isCorePoint(minPoints, neighborhood)){
                         for (Point neighbor: neighborhood){
                             if(!neighbor.belongToACluster()) {
                                 if(!neighbor.isVisited()){
@@ -59,5 +59,13 @@ public class Clustering {
         return neighborhood;
     }
 
-
+    /**
+     * Check whether a point is a core point based on its neighborhood
+     * @param minPoints     minPoints DBSCAN parameter
+     * @param neighborhood  array containing the neighborhood of the point
+     * @return true if it is a core point, false otherwise
+     */
+    private static boolean isCorePoint(int minPoints, LinkedList<Point> neighborhood) {
+        return neighborhood.size() >= minPoints;
+    }
 }
