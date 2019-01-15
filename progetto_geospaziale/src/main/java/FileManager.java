@@ -22,7 +22,9 @@ public class FileManager {
                 } else {
                     String[] split = line.split(",");
                     points.add(new Point(
-                            Integer.parseInt(split[1]),
+                            new Integer(split[0]),
+                            new Integer(split[1]),
+                            new String(split[2]),
                             new Double(split[3]),
                             new Double(split[4])));
                 }

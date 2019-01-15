@@ -2,7 +2,9 @@ import java.util.Objects;
 
 public class Point {
 
+    private int animal;
     private int id;
+    private String time;
     private double x;
     private double y;
     private int label = UNVISITED;
@@ -15,8 +17,10 @@ public class Point {
      * @param x:    the x coordinate
      * @param y:    the y coordinate
      */
-    public Point(int id, double x, double y) {
+    public Point(int animal, int id, String time, double x, double y) {
+        this.animal = animal;
         this.id = id;
+        this.time = time;
         this.x = x;
         this.y = y;
     }
@@ -68,6 +72,13 @@ public class Point {
      * @return a string representing this point in CSV format
      */
     public String getCSVRow() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.animal).append(",")
+        .append(this.id).append(",")
+        .append(this.time).append(",")
+        .append(this.x).append(",")
+        .append(this.y).append(",")
+        .append(this.label);
         return id + "," + x + ","+ y + "," + label;
     }
 
@@ -76,7 +87,7 @@ public class Point {
      * @return a string representing the header in CSV format
      */
     public static String getCSVHeader(){
-        return "id,x,y,label";
+        return "animal,id,time,x,y,label";
     }
 
     /**

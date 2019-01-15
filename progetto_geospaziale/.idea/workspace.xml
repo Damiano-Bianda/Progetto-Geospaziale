@@ -19,10 +19,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Clustering.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Clustering.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Clustering.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="551">
+            <state relative-caret-position="1139">
               <caret line="67" selection-start-line="67" selection-end-line="69" selection-end-column="5" />
             </state>
           </provider>
@@ -31,21 +31,17 @@
       <file leaf-file-name="Point.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Point.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="19" column="19" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
-              <folding>
-                <element signature="e#1198#1199#0" expanded="true" />
-                <element signature="e#1246#1247#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="17">
+              <caret line="25" selection-start-line="25" selection-end-line="25" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="20_distances.csv" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/20_distances.csv">
+      <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+            <state relative-caret-position="34">
+              <caret line="2" selection-start-line="2" selection-end-line="2" />
             </state>
           </provider>
         </entry>
@@ -53,8 +49,8 @@
       <file leaf-file-name="FileManager.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/FileManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="901">
-              <caret line="55" column="5" selection-start-line="44" selection-start-column="4" selection-end-line="55" selection-end-column="5" />
+            <state relative-caret-position="85">
+              <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -62,11 +58,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="App.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="App.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/App.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
+            <state relative-caret-position="450">
+              <caret line="33" column="38" lean-forward="true" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -74,7 +79,7 @@
       <file leaf-file-name="CommandLineArguments.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/CommandLineArguments.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1003">
+            <state relative-caret-position="688">
               <caret line="63" column="45" selection-start-line="63" selection-start-column="45" selection-end-line="63" selection-end-column="45" />
             </state>
           </provider>
@@ -294,7 +299,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="6184626099318" />
+        <entry key="$PROJECT_DIR$" value="6186186150375" />
         <entry key="$PROJECT_DIR$/.gradle" value="0" />
         <entry key="$PROJECT_DIR$/build.gradle" value="190092430" />
         <entry key="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" value="1741342742" />
@@ -418,15 +423,15 @@
         <option value="$PROJECT_DIR$/src/main/java/Parser.java" />
         <option value="$PROJECT_DIR$/src/main/java/Coordinate.java" />
         <option value="$PROJECT_DIR$/src/main/java/DBSCAN.java" />
-        <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/src/main/java/CommandLineArguments.java" />
-        <option value="$PROJECT_DIR$/src/main/java/FileManager.java" />
         <option value="$PROJECT_DIR$/src/main/java/TEST.java" />
         <option value="$PROJECT_DIR$/src/main/java/IdNroNeigh.java" />
-        <option value="$PROJECT_DIR$/src/main/java/App.java" />
         <option value="$PROJECT_DIR$/src/main/java/NN.java" />
-        <option value="$PROJECT_DIR$/src/main/java/Point.java" />
         <option value="$PROJECT_DIR$/src/main/java/Clustering.java" />
+        <option value="$PROJECT_DIR$/src/main/java/FileManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/Point.java" />
+        <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/src/main/java/App.java" />
       </list>
     </option>
   </component>
@@ -439,10 +444,10 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="728" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="645" />
     <option name="y" value="41" />
-    <option name="width" value="1175" />
+    <option name="width" value="1275" />
     <option name="height" value="993" />
   </component>
   <component name="ProjectView">
@@ -450,6 +455,24 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
+      <pane id="PackagesPane" />
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="progetto_geospaziale" type="cbb8eebc:String" user="progetto_geospaziale" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="progetto_geospaziale" type="cbb8eebc:String" user="progetto_geospaziale" />
+              <item name="progetto_geospaziale" type="cbb8eebc:String" user="progetto_geospaziale" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -479,24 +502,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <expand>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="progetto_geospaziale" type="cbb8eebc:String" user="progetto_geospaziale" />
-            </path>
-            <path>
-              <item name="Root" type="cbb8eebc:String" user="Root" />
-              <item name="progetto_geospaziale" type="cbb8eebc:String" user="progetto_geospaziale" />
-              <item name="progetto_geospaziale" type="cbb8eebc:String" user="progetto_geospaziale" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -532,7 +537,6 @@
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="App" />
       <module name="progetto_geospaziale_main" />
-      <option name="PROGRAM_PARAMETERS" value="&quot;C:\\Users\\damia\\Dropbox\\UnimiMateriale\\Gestione dell'informazione geospaziale\\Progetto-Geospaziale\\progetto_geospaziale\\animale.csv&quot; 250 25" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
     </configuration>
     <configuration name="NN" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -638,29 +642,39 @@
       <workItem from="1546961064874" duration="9457000" />
       <workItem from="1546985148488" duration="3477000" />
       <workItem from="1547039725953" duration="819000" />
+      <workItem from="1547280779304" duration="405000" />
+      <workItem from="1547281434485" duration="750000" />
+      <workItem from="1547366293575" duration="1802000" />
+      <workItem from="1547376406554" duration="55000" />
+      <workItem from="1547377523108" duration="108000" />
+      <workItem from="1547378017055" duration="1571000" />
+      <workItem from="1547546100959" duration="249000" />
+      <workItem from="1547546594139" duration="56000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="107760000" />
+    <option name="totallyTimeSpent" value="112756000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.49327356" weight="0.30429733" />
       <window_info anchor="right" id="Palette&#9;" order="9" />
       <window_info id="Image Layers" order="6" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.37313432" side_tool="true" visible="true" weight="0.16450216" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.37526652" side_tool="true" visible="true" weight="0.16341992" />
       <window_info anchor="right" id="Maven Projects" order="5" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="11" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.6268657" weight="0.16450216" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.62473345" visible="true" weight="0.16341992" />
       <window_info anchor="bottom" id="Terminal" order="8" />
       <window_info id="Capture Tool" order="5" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.23294243" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26545843" />
       <window_info anchor="right" id="Database" order="7" />
       <window_info anchor="right" id="Gradle" order="6" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -669,10 +683,9 @@
       <window_info anchor="right" id="Theme Preview" order="8" />
       <window_info id="Favorites" order="4" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49307036" weight="0.40584415" />
-      <window_info anchor="bottom" id="Messages" order="12" sideWeight="0.49626866" weight="0.3051948" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Build" order="10" sideWeight="0.49865472" weight="0.32868758" />
+      <window_info anchor="bottom" id="Build" order="10" sideWeight="0.49626866" visible="true" weight="0.32792208" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -708,13 +721,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/Point.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="901">
-          <caret line="65" column="38" selection-start-line="65" selection-start-column="38" selection-end-line="65" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -930,6 +936,15 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/results.csv2" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/TEST.java" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/IdNroNeigh.java" />
+    <entry file="file://$PROJECT_DIR$/results.csv" />
+    <entry file="file://$PROJECT_DIR$/src/main/java/NN.java" />
+    <entry file="file://$PROJECT_DIR$/test.csv">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/20_distances.csv" />
+    <entry file="file://$PROJECT_DIR$/_1547281118290_250.0_25_results.csv" />
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -937,72 +952,48 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/TEST.java" />
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/IdNroNeigh.java" />
-    <entry file="file://$PROJECT_DIR$/results.csv">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="208" column="39" selection-start-line="208" selection-start-column="37" selection-end-line="208" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/NN.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/CommandLineArguments.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1003">
-          <caret line="63" column="45" selection-start-line="63" selection-start-column="45" selection-end-line="63" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.csv">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/App.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/FileManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="901">
-          <caret line="55" column="5" selection-start-line="44" selection-start-column="4" selection-end-line="55" selection-end-column="5" />
+        <state relative-caret-position="85">
+          <caret line="7" column="5" selection-start-line="7" selection-start-column="5" selection-end-line="7" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/20_distances.csv">
+    <entry file="file://$PROJECT_DIR$/src/main/java/Clustering.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
+        <state relative-caret-position="1139">
+          <caret line="67" selection-start-line="67" selection-end-line="69" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="18" selection-start-line="16" selection-start-column="18" selection-end-line="16" selection-end-column="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Point.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="19" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
-          <folding>
-            <element signature="e#1198#1199#0" expanded="true" />
-            <element signature="e#1246#1247#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="17">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Clustering.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/CommandLineArguments.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="67" selection-start-line="67" selection-end-line="69" selection-end-column="5" />
+        <state relative-caret-position="688">
+          <caret line="63" column="45" selection-start-line="63" selection-start-column="45" selection-end-line="63" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/App.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="33" column="38" lean-forward="true" selection-start-line="33" selection-start-column="38" selection-end-line="33" selection-end-column="38" />
         </state>
       </provider>
     </entry>

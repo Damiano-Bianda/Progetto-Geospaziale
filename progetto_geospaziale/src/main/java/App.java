@@ -31,7 +31,7 @@ public class App {
         Clustering.DBSCAN(points, commandLineArguments.getEps(), commandLineArguments.getMinPoints());
 
         try {
-            FileManager.write(points, "_" + System.currentTimeMillis()+"_"+commandLineArguments.getEps()+"_"+commandLineArguments.getMinPoints()+"_"+resultsFileName);
+            FileManager.write(points, resultsFileName);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.exit(3);
