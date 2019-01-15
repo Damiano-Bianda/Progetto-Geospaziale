@@ -79,7 +79,7 @@ public class Point {
         .append(this.x).append(",")
         .append(this.y).append(",")
         .append(this.label);
-        return id + "," + x + ","+ y + "," + label;
+        return sb.toString();
     }
 
     /**
@@ -112,4 +112,7 @@ public class Point {
         return Objects.hash(id);
     }
 
+    public int getId() {
+        return id;
+    }
 }

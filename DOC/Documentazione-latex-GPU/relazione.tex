@@ -60,7 +60,7 @@
 \end{abstract}
 \section{Algoritmo}
 \subsection{Introduzione}
-DBSCAN è un algoritmo di clustering partitivo basato sulla densità, questo significa che è in grado di assegnare ogni punto di un dataset ad un solo cluster, oppure identificarlo come rumore qualora si trovasse in una zona nello spazio dove la densità degli elementi è bassa.\\
+DBSCAN è un algoritmo di clustering partitivo basato sulla densità, cioè in grado di assegnare ogni punto di un dataset ad un solo cluster, oppure identificarlo come rumore qualora si trovasse in una zona nello spazio dove la densità degli elementi è bassa.\\
 I principali vantaggi sono che è possibile scoprire clusters di forme arbitrarie (dimensioni e forme differenti) e discernere i dati che rappresentano rumore.\\
 I svantaggi sono invece che essendo un algoritmo parametrico è necessario definire dei parametri in base alla conformazione dei dati da analizzare e che alcuni dataset presentano il problema della densità variabile, ossia sono presenti più cluster ma di densità diverse e quindi dato un set di parametri non è possibile identificarli tutti in modo corretto.
 \newpage
@@ -88,16 +88,16 @@ Quindi un cluster è un insieme massimo di punti density-connected.
 DBSCAN itera una sola volta su tutti i punti presenti nel dataset e per ognuno non ancora visitato si determina se è un core point, se si viene aggiunto, assieme al suo vicinato, ad un nuovo cluster e quest'ultimo dovrà essere espanso, altrimenti si procede a controllare il punto successivo.\\
 L'espansione è un processo iterativo in cui ad ogni iterazione viene controllato un punto appena aggiunto al cluster per determinare se a sua volta è un core point o un border point. Nel primo caso il vicinato viene aggiunto al cluster e necessita anch'esso di essere controllato in iterazioni successive, nel secondo caso il processo d'espansione a partire da quel punto s'interrompe.
 L'espansione termina quando tutti i core point di un cluster sono stati espansi fino a raggiungere i border point ed ottenendo quindi l'insieme massimo di punti density-connected.\\
-Dopodichè l'iterazione principale continua cercando di espandere altri punti appartenenti al dataset non ancora visitati.\\
-Al termine del processo, a dipendenza dei parametri specificati, si potranno ottenere un insieme di clusters e dei punti che a causa della loro posizione sono stati classificati come noise points.
+Dopodichè il processo si ripete, controllando i punti non ancora visitati e cercando di espanderli per creare nuovi clusters.\\
+Al termine dell'algoritmo, a dipendenza dei parametri specificati, si potranno ottenere un insieme di clusters e dei punti che a causa della loro posizione sono stati classificati come noise points.
 
 \section{Implementazione}
 \subsection{Descrizione pseudocodice}
-DBSCAN si aspetta che ogni punto appartenente al dataset è inizialmente etichettato come non visitato, al termine dell'esecuzione ogni punto avrà un etichetta pari a 0 o superiore per indicare rispettivamente che è rumore o il cluster d'appartenenza.\\
+Inizialemnte ogni punto appartenente al dataset è etichettato come non visitato, al termine dell'esecuzione ogni punto avrà un etichetta pari a 0 o superiore per indicare rispettivamente che è rumore o il cluster d'appartenenza.\\
 L'implementazione è composta da due iterazioni annidate. Il ciclo for esterno itera su tutti i punti presenti nel dataset e considera solo quelli che non sono stati visitati, ossia non sono mai stati etichettati come rumore o appartenenti ad un cluster. Il ciclo while interno determina se il punto di partenza ha le caratteristiche per espandersi e in caso positivo procede iterativamente a formare un cluster.\\
-Una volta scelto un punto non visitato viene etichettato preventivamente come rumore ed inserito in una coda, inoltre viene creata una variabile booleana inizialmente pari a false che indica se un cluster è stato creato. Il ciclo while estrae ogni ad ogni iterazione un elemento dalla coda e termina quando questa è vuota.\\
-La prima iterazione del ciclo while ha lo scopo di determinare se il punto di partenza è un core point. In caso affermativo parte del suo vicinato viene etichettata come appartenente al cluster, aggiunto alla coda e la variabile booleana viene impostata a true, in caso contrario nulla di tutto ciò avviene ed il ciclo while termina mantenendo inalterata l'etichetta rumore.\\
-Durante ogni iterazione successiva del ciclo while si estrae un punto dalla coda, determinando a sua volta se è un core point, in caso positivo parte dei vicini vengono assegnati al cluster corrente ed aggiunti alla coda, se invece il suo vicinato non ha la dimensione necessaria, allora è un border point e quindi la sua espansione termina.\\
+Una volta scelto un punto non visitato viene etichettato preventivamente come rumore ed inserito in una coda, inoltre viene creata una variabile booleana inizialmente pari a false che indica se un cluster è stato creato. Il ciclo while estrae ad ogni iterazione un elemento dalla coda e termina quando questa è vuota.\\
+La prima iterazione del ciclo while ha lo scopo di determinare se il punto di partenza è un core point. In caso affermativo il punto viene aggiunto al nuovo cluster, cosiccome parte del suo vicinato, quest'ultima viene aggiunta alla coda e la variabile booleana viene impostata a true. In caso contrario nulla di tutto ciò avviene ed il ciclo while termina mantenendo inalterata l'etichetta rumore del punto.\\
+Durante ogni iterazione successiva del ciclo while si estrae un punto dalla coda, determinando a sua volta se è un core point, in caso positivo parte dei vicini vengono assegnati al cluster corrente ed aggiunti alla coda. Se invece il suo vicinato non ha la dimensione necessaria, allora è un border point e quindi la sua espansione termina.\\
 Ogni volta che viene determinato un core point non tutto il vicinato viene etichettato e/o aggiunto alla coda, questo perchè ogni vicino può: 
 \begin{enumerate}
 	\item appartenere già ad un cluster\\
@@ -105,19 +105,21 @@ Ogni volta che viene determinato un core point non tutto il vicinato viene etich
 	in casi più rari un vicino potrebbe essere border point di più cluster, è indifferente a quale viene assegnato, ma lasciarlo inalterato è più conveniente.\\
 	In entrambe queste situazioni il vicino non viene nè aggiunto ne etichettato.
 	\item essere rumore\\
-	Se precedentemente un punto è stato etichettato come rumore, significa che era stato estratto dall'iterazione principale e durante la prima esecuzione del ciclo while è risultato non essere un core point.\\
+	Se precedentemente un punto è stato etichettato come rumore, significa che era stato estratto in un iterazione del ciclo for principale e durante la prima esecuzione del ciclo while è risultato non essere un core point.\\
 	In questo caso il punto diventa un border point del nuovo cluster e non c'è bisogno di controllare nuovamente la condizione di core point attraverso la dimensione del suo vicinato.\\
 	Quindi viene etichettato come appartenente al cluster corrente, ma non aggiunto alla coda.
 	\item essere non visitato\\
-	È un punto che non è mai stato controllato, di conseguenza non si sa se è un core point oppure un border point, in questo caso deve essere aggiunto alla coda ed etichettato come appartenente al cluster corrente. Durante una delle iterazioni successive verrà fatto il controllo.
+	È un punto che non è mai stato controllato, di conseguenza non si sa se è un core point oppure un border point, in questo caso deve essere aggiunto alla coda ed etichettato come appartenente al cluster corrente. Durante una delle iterazioni successive del ciclo while verrà estratto dalla coda e controllato.
 \end{enumerate}
 Una volta che un cluster è stato completamente espanso o il punto di partenza non è risultato essere un core point viene controllata la variabile booleana, se questa è vera l'etichetta del cluster viene incrementata altrimenti la si lascia inalterata in quanto il cluster con quel identificatore non esiste ancora.\\
 La parte più onerosa dell'algoritmo è il fatto di dovere determinare il vicinato di ogni punto tramite la funzione neighborhood, in quanto bisogna controllare se la distanza tra il punto passato come argomento ed ognuno presente nel dataset è minore od uguale a \textepsilon. Mantenendo l'informazione se il nodo è già stato visitato è possibile limitare i controlli ad uno per ogni punto.\\
-Si è deciso di utilizzare una coda in quanto l'algoritmo ha molte similitudini con la ricerca in ampiezza su grafi/alberi e risulta essere un buon approccio anche per DBSCAN. 	
+Si è deciso di utilizzare una coda in quanto l'algoritmo ha molte similitudini con la ricerca in ampiezza su grafi/alberi e risulta essere un buon approccio anche per DBSCAN, tuttavia è possibile usare qualsiasi struttura dati che permette di inerire ed estrarre nodi in tempo costante. 	
 \subsection{Implementazione tramite Java}
 L'implementazione tramite Java rispecchia il pseudocodice, la coda è stata implementata tramite una LinkedList ossia una lista concatenata che permette l'inserimento e la rimozione ai lati in tempi costanti.
-Le classi principali sono quella Clustering che contiene i metodi statici DBSCAN e neighborhood e la classe Point le cui istanze rappresentano i singoli punti del dataset e mette a disposizioni metodi per interrogarla sulla label corrente e calcolare la distanza con un altro oggetto Point.
+Le classi principali sono quella Clustering che contiene i metodi statici DBSCAN e neighborhood e la classe Point le cui istanze rappresentano i singoli punti del dataset, mette a disposizioni metodi per interrogarla sulla label corrente e calcolare la distanza con un altro oggetto Point.
+\newpage
 \begin{algorithm}[H]
+	\thispagestyle{empty}
 	\caption{Density-Based Spatial Clustering of Applications with Noise}
 	\begin{algorithmic}[H]
 		\Procedure {DBSCAN}{$points$, $eps$, $minPoints$}
@@ -167,7 +169,7 @@ Le classi principali sono quella Clustering che contiene i metodi statici DBSCAN
 		\EndFunction
 		\\
 		\Function{distance}{$pointA$, $pointB$}
-		\State \textbf{return} sqrt((pointA.x - pointB.x) + (pointA.y - pointB.y))
+		\State \textbf{return} $sqrt((pointA.x - pointB.x)^2 + (pointA.y - pointB.y)^2)$
 		\EndFunction
 		\\
 		\Function{isCorePoint}{$neighborhood$, $minPoints$}
@@ -223,14 +225,10 @@ private static boolean isCorePoint(int minPoints, LinkedList<Point> neighborhood
 	return neighborhood.size() >= minPoints;
 }
 
-public boolean belongToACluster(){
-	return this.label > 0;
-}
+public boolean belongToACluster(){ return this.label > 0; }
 
 public double distance(Point point){
-	return Math.sqrt(Math.pow(point.x - this.x, 2) + Math.pow(point.y - this.y , 2));
-}
-
+	return Math.sqrt(Math.pow(point.x - this.x, 2) + Math.pow(point.y - this.y , 2)); }
 \end{lstlisting}
 
 \section{Risultati ottenuti}
@@ -243,7 +241,8 @@ I punti sono stati rappresentati con il sistema di coordinate proiettate EPSG 38
 	\label{fig:ratio}
 \end{figure}
 \newpage
-In questa rappresentazione dei dati si possono visualizzare le zone dove la densità di punti è maggiore, è stato generato un buffer semi-trasparente di distanza pari a \textepsilon attorno ad ogni punto. Le zone dove il bianco è più intenso sono anche quelle più dense. Da notare che l'informazione non è completa in quanto non tiene in considerazione il numero di punti presenti in ogni vicinato, tuttavia riesce a dare un intuizione visiva.
+In questa rappresentazione dei dati si può visualizzare la densità dei punti in ogni zona.\\
+Attorno ad ogni punto è stato generato un buffer bianco con opacità pari a 100 / minPoints (se 0 il colore è trasparente, se 100 opaco). Quindi le zone completamente opache sono quelle dove i contributi di un numero pari o maggiore di minPoints buffer si sommano e dove si trovano i core points, viceversa in posizioni parzialmente trasparenti si trovano i border ed i noise points.
 \begin{figure}[H]
 	\center
 	\includegraphics[scale=0.65]{images/densita_300_20.png}
@@ -261,7 +260,7 @@ Come si vede dalla mappa, due ulteriori punti in precedenza appartenenti al clus
 	\label{fig:ratio}
 \end{figure}
 \newpage
-Anche in questo caso è stata creata una mappa che dà un idea intuitiva della distribuzione di densità dei punti.
+Anche in questo caso è stata creata una mappa che visualizza la densità nelle varie zone.
 \begin{figure}[H]
 	\center
 	\includegraphics[scale=0.65]{images/densita_245_25.png}
